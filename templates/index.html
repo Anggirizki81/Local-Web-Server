@@ -1,0 +1,7 @@
+<!doctype html><html><head><link rel="stylesheet" href="/static/style.css"></head>
+<body><div class="container"><h2>📁 File Server</h2>
+<form action="/upload" method="post" enctype="multipart/form-data">
+<input type=file name=file><button>Upload</button></form>
+<table><tr><th>Nama File</th><th>Ukuran</th><th>Aksi</th></tr>
+{% for i in items %}<tr><td>{{i.name}}</td><td>{{i.size}}</td><td>{% if not i.dir %}<a href="/download/{{i.name}}">Download</a><a href="/delete/{{i.name}}">Delete</a>{% endif %}</td></tr>{% endfor %}
+</table></div></body></html>
