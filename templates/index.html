@@ -1,9 +1,42 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-{% block content %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<h1 class="m-4">
-    Engineering File Server
-</h1>
+    <title>EFile Server</title>
 
-{% endblock %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='adminlte/dist/css/adminlte.min.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/app.css') }}">
+
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+<div class="app-wrapper">
+
+    {% include 'components/navbar.html' %}
+
+    {% include 'components/sidebar.html' %}
+
+    <main class="app-main">
+
+        {% include 'components/toolbar.html' %}
+
+        {% include 'components/explorer.html' %}
+
+    </main>
+
+    {% include 'components/footer.html' %}
+
+</div>
+
+<script src="{{ url_for('static', filename='adminlte/dist/js/adminlte.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>

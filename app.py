@@ -3,7 +3,9 @@ from routes.browser import browser_bp
 import config
 
 app = Flask(__name__)
+app.secret_key = "file-server-secret"
 
+app.config["SHARED_FOLDER"] = config.SHARED_FOLDER
 app.config["UPLOAD_FOLDER"] = config.UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = config.MAX_UPLOAD_SIZE
 

@@ -1,0 +1,108 @@
+<div class="container-fluid py-3">
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h3 class="card-title">
+                📁 File Server
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
+
+                <div class="input-group">
+
+                    <input
+                        type="file"
+                        name="file"
+                        class="form-control">
+
+                    <button class="btn btn-primary">
+
+                        Upload
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            <table class="table table-hover table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Nama File</th>
+                        <th>Ukuran</th>
+                        <th width="180">Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for i in items %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if i.dir %}
+                                📁
+                            {% else %}
+                                📄
+                            {% endif %}
+
+                            {{ i.name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ i.size }}
+
+                        </td>
+
+                        <td>
+
+                            {% if not i.dir %}
+
+                                <a
+                                    class="btn btn-success btn-sm"
+                                    href="/download/{{ i.name }}">
+
+                                    Download
+
+                                </a>
+
+                                <a
+                                    class="btn btn-danger btn-sm"
+                                    href="/delete/{{ i.name }}">
+
+                                    Delete
+
+                                </a>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
