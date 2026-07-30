@@ -14,6 +14,11 @@
 
             <form action="/upload" method="post" enctype="multipart/form-data" class="mb-3">
 
+                <input
+                    type="hidden"
+                    name="path"
+                    value="{{ current_path }}">
+
                 <div class="input-group">
 
                     <input
@@ -21,7 +26,9 @@
                         name="file"
                         class="form-control">
 
-                    <button class="btn btn-primary">
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
 
                         Upload
 
@@ -54,12 +61,18 @@
                         <td>
 
                             {% if i.dir %}
-                                📁
-                            {% else %}
-                                📄
-                            {% endif %}
 
-                            {{ i.name }}
+                            <a href="/?path={{ i.path }}">
+
+                                📁 {{ i.name }}
+
+                            </a>
+
+                            {% else %}
+
+                            📄 {{ i.name }}
+
+                            {% endif %}
 
                         </td>
 
@@ -75,7 +88,7 @@
 
                                 <a
                                     class="btn btn-success btn-sm"
-                                    href="/download/{{ i.name }}">
+                                    href="/download/{{ i.path }}">
 
                                     Download
 
@@ -83,7 +96,7 @@
 
                                 <a
                                     class="btn btn-danger btn-sm"
-                                    href="/delete/{{ i.name }}">
+                                    href="/delete/{{ i.path }}">
 
                                     Delete
 
