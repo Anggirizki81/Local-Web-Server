@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from flask import jsonify
 
 from flask import (
@@ -29,15 +29,29 @@ def index():
 
     items = list_items(folder, root)
 
+    # ===== Tambahkan bagian ini =====
+    if current_path:
+        parent = str(PurePosixPath(current_path).parent)
+        if parent == ".":
+            parent = ""
+        back_url = f"/?path={parent}"
+    else:
+        back_url = None
+    # ================================
+
     return render_template(
         "index.html",
         items=items,
         current_path=current_path,
+        back_url=back_url,   # Tambahkan ini
     )
+
+
 
 
 @browser_bp.route("/upload", methods=["POST"])
 def upload():
+    
 
     current_path = request.form.get("path", "")
 
