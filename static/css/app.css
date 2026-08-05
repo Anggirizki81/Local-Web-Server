@@ -1,0 +1,68 @@
+body {
+    background: #f4f6f9;
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.form-control {
+    border-radius: 8px;
+}
+
+.app-sidebar {
+    min-height: 100vh;
+}
+
+.nav-sidebar .nav-link {
+    border-radius: 8px;
+    margin: 2px 8px;
+}
+
+.nav-sidebar .nav-link i {
+    width: 22px;
+}
+
+.sidebar-brand {
+    padding: 15px;
+    font-size: 18px;
+}
+
+.drop-zone{
+
+    border:2px dashed #0d6efd;
+
+    border-radius:12px;
+
+    padding:50px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.drop-zone:hover{
+
+    background:#eef5ff;
+}
+
+.drop-zone.dragover{
+
+    background:#dbeafe;
+
+    border-color:#2563eb;
+}

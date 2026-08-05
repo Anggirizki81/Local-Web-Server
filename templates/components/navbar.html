@@ -1,12 +1,43 @@
-<nav class="app-header navbar navbar-expand bg-primary">
+<nav class="app-header navbar navbar-expand bg-primary navbar-dark">
 
     <div class="container-fluid">
 
-        <span class="navbar-brand text-white">
+        <!-- Sidebar Toggle -->
+        <button
+            class="btn btn-link text-white"
+            type="button"
+            data-lte-toggle="sidebar">
 
-            File Server
+            ☰
 
-        </span>
+        </button>
+
+        <!-- Logo -->
+        <a href="/" class="navbar-brand ms-2">
+
+            <strong>📁 File Server</strong>
+
+        </a>
+
+        <!-- Search -->
+        <form class="d-none d-md-flex ms-auto me-2" method="get" action="/">
+
+            <input
+                class="form-control"
+                type="search"
+                name="search"
+                placeholder="Search...">
+
+        </form>
+
+        <!-- Refresh -->
+        <button
+            class="btn btn-outline-light"
+            onclick="location.reload()">
+
+            🔄
+
+        </button>
 
     </div>
 

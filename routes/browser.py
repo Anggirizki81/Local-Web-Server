@@ -1,4 +1,5 @@
 from pathlib import Path
+from flask import jsonify
 
 from flask import (
     Blueprint,
@@ -46,11 +47,18 @@ def upload():
 
     file = request.files.get("file")
 
-    if file and file.filename:
+    if not file:
+        return jsonify({
+            "success": False,
+            "message": "No file"
+        })
 
-        file.save(folder / file.filename)
+    file.save(folder / file.filename)
 
-    return redirect(f"/?path={current_path}")
+    return jsonify({
+        "success": True,
+        "filename": file.filename
+    })
 
 
 @browser_bp.route("/download/<path:file_path>")
