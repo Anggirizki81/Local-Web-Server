@@ -1,8 +1,8 @@
 from pathlib import Path, PurePosixPath
-from flask import jsonify
-
+import shutil
 from flask import (
     Blueprint,
+    jsonify,
     current_app,
     redirect,
     render_template,
@@ -46,9 +46,6 @@ def index():
         back_url=back_url,   # Tambahkan ini
     )
 
-
-
-
 @browser_bp.route("/upload", methods=["POST"])
 def upload():
     
@@ -88,20 +85,179 @@ def download(file_path):
         as_attachment=True
     )
 
+@browser_bp.route("/new-folder", methods=["POST"])
+def new_folder():
 
-@browser_bp.route("/delete/<path:file_path>")
-def delete(file_path):
+    current_path = request.form.get("path", "")
+
+    folder_name = request.form.get("name", "").strip()
+
+    if not folder_name:
+
+        return jsonify({
+            "success": False,
+            "message": "Folder name required"
+        }), 400
 
     root = Path(current_app.config["SHARED_FOLDER"])
 
-    file = safe_path(root, file_path)
+    folder = safe_path(root, current_path)
 
-    if file.exists() and file.is_file():
-        file.unlink()
+    new_dir = folder / folder_name
 
-    parent = Path(file_path).parent.as_posix()
+    if new_dir.exists():
 
-    if parent == ".":
-        parent = ""
+        return jsonify({
+            "success": False,
+            "message": "Folder already exists"
+        }), 400
 
-    return redirect(f"/?path={parent}")
+    new_dir.mkdir()
+
+    return jsonify({
+        "success": True
+    })
+
+@browser_bp.route("/rename", methods=["POST"])
+def rename():
+
+    current_path = request.form.get("path", "")
+    old_name = request.form.get("old_name", "").strip()
+    new_name = request.form.get("new_name", "").strip()
+
+    # Validasi nama
+    if not old_name or not new_name:
+        return jsonify({
+            "success": False,
+            "message": "Nama file atau folder tidak boleh kosong."
+        }), 400
+
+    # Cegah path traversal melalui nama baru/lama
+    if (
+        Path(old_name).name != old_name
+        or Path(new_name).name != new_name
+        or old_name in {".", ".."}
+        or new_name in {".", ".."}
+    ):
+        return jsonify({
+            "success": False,
+            "message": "Nama tidak valid."
+        }), 400
+
+    root = Path(current_app.config["SHARED_FOLDER"])
+
+    try:
+        folder = safe_path(root, current_path)
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Path tidak valid."
+        }), 400
+
+    old_path = folder / old_name
+    new_path = folder / new_name
+
+    # Pastikan file/folder sumber benar-benar berada di folder aktif
+    try:
+        old_path.resolve().relative_to(root.resolve())
+        new_path.resolve().relative_to(root.resolve())
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Akses tidak diizinkan."
+        }), 403
+
+    # File/folder lama tidak ditemukan
+    if not old_path.exists():
+        return jsonify({
+            "success": False,
+            "message": "File atau folder tidak ditemukan."
+        }), 404
+
+    # Nama baru sudah digunakan
+    if new_path.exists():
+        return jsonify({
+            "success": False,
+            "message": "Nama tersebut sudah digunakan."
+        }), 400
+
+    try:
+        old_path.rename(new_path)
+
+        return jsonify({
+            "success": True,
+            "message": "Berhasil diubah.",
+            "old_name": old_name,
+            "new_name": new_name
+        })
+
+    except OSError as e:
+        return jsonify({
+            "success": False,
+            "message": f"Gagal mengubah nama: {str(e)}"
+        }), 500
+
+@browser_bp.route("/delete", methods=["POST"])
+def delete():
+
+    current_path = request.form.get("path", "")
+    name = request.form.get("name", "").strip()
+
+    if not name:
+        return jsonify({
+            "success": False,
+            "message": "Nama file atau folder tidak valid."
+        }), 400
+
+    # Cegah akses ke path di luar folder aktif
+    if (
+        Path(name).name != name
+        or name in {".", ".."}
+    ):
+        return jsonify({
+            "success": False,
+            "message": "Nama tidak valid."
+        }), 400
+
+    root = Path(current_app.config["SHARED_FOLDER"])
+
+    try:
+        folder = safe_path(root, current_path)
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Path tidak valid."
+        }), 400
+
+    target = folder / name
+
+    try:
+        target.resolve().relative_to(root.resolve())
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Akses tidak diizinkan."
+        }), 403
+
+    if not target.exists():
+        return jsonify({
+            "success": False,
+            "message": "File atau folder tidak ditemukan."
+        }), 404
+
+    try:
+        if target.is_dir():
+            shutil.rmtree(target)
+        else:
+            target.unlink()
+
+        return jsonify({
+            "success": True,
+            "message": "Berhasil dihapus."
+        })
+
+    except OSError as e:
+        return jsonify({
+            "success": False,
+            "message": f"Gagal menghapus: {str(e)}"
+        }), 500

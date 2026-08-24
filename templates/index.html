@@ -28,9 +28,11 @@
 
     <main class="app-main">
 
+        {% include 'modals/rename.html' %}
         {% include 'components/toolbar.html' %}
         {% include 'components/upload_zone.html' %}
         {% include 'components/explorer.html' %}
+        {% include 'modals/new_folder.html' %}
 
     </main>
 
@@ -38,9 +40,19 @@
 
 </div>
 
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<script>
+    console.log("Bootstrap loaded:", typeof window.bootstrap);
+</script>
+
 <script src="{{ url_for('static', filename='adminlte/dist/js/adminlte.min.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/folder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/rename.js') }}"></script>
+<script src="{{ url_for('static', filename='js/delete.js') }}"></script>
 
 </body>
 </html>
