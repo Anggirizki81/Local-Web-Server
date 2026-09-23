@@ -1,4 +1,5 @@
 from pathlib import Path, PurePosixPath
+from werkzeug.utils import secure_filename
 import shutil
 from flask import (
     Blueprint,
@@ -48,13 +49,18 @@ def index():
 
 @browser_bp.route("/upload", methods=["POST"])
 def upload():
-    
 
     current_path = request.form.get("path", "")
 
     root = Path(current_app.config["SHARED_FOLDER"])
 
-    folder = safe_path(root, current_path)
+    try:
+        folder = safe_path(root, current_path)
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Invalid path"
+        }), 400
 
     file = request.files.get("file")
 
@@ -62,13 +68,38 @@ def upload():
         return jsonify({
             "success": False,
             "message": "No file"
-        })
+        }), 400
 
-    file.save(folder / file.filename)
+    if not file.filename:
+        return jsonify({
+            "success": False,
+            "message": "Invalid filename"
+        }), 400
+
+    filename = secure_filename(file.filename)
+
+    if not filename:
+        return jsonify({
+            "success": False,
+            "message": "Invalid filename"
+        }), 400
+
+    destination = folder / filename
+
+    try:
+
+        file.save(destination)
+
+    except OSError as e:
+
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
 
     return jsonify({
         "success": True,
-        "filename": file.filename
+        "filename": filename
     })
 
 
