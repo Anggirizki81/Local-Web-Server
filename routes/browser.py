@@ -1,4 +1,5 @@
 from pathlib import Path, PurePosixPath
+from flask import send_file
 from werkzeug.utils import secure_filename
 import shutil
 from flask import (
@@ -108,12 +109,24 @@ def download(file_path):
 
     root = Path(current_app.config["SHARED_FOLDER"])
 
-    file = safe_path(root, file_path)
+    try:
+        file = safe_path(root, file_path)
+    except ValueError:
+        return jsonify({
+            "success": False,
+            "message": "Path tidak valid."
+        }), 400
 
-    return send_from_directory(
-        file.parent,
-        file.name,
-        as_attachment=True
+    if not file.exists() or not file.is_file():
+        return jsonify({
+            "success": False,
+            "message": "File tidak ditemukan."
+        }), 404
+
+    return send_file(
+        file,
+        as_attachment=True,
+        download_name=file.name
     )
 
 @browser_bp.route("/new-folder", methods=["POST"])
