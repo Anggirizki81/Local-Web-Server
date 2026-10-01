@@ -26,7 +26,53 @@
 
     {% include 'components/sidebar.html' %}
 
+    <!-- Page Content -->
     <main class="app-main">
+
+        <!-- Breadcrumb -->
+    <div class="container-fluid mt-3">
+
+        <nav aria-label="breadcrumb">
+
+            <ol class="breadcrumb mb-3">
+
+                <li class="breadcrumb-item">
+                    <a href="/">
+                        🏠 Home
+                    </a>
+                </li>
+
+                {% for item in breadcrumb %}
+
+                    {% if loop.last %}
+
+                        <li
+                            class="breadcrumb-item active"
+                            aria-current="page">
+
+                            {{ item.name }}
+
+                        </li>
+
+                    {% else %}
+
+                        <li class="breadcrumb-item">
+
+                            <a href="/?path={{ item.path }}">
+                                {{ item.name }}
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </ol>
+
+        </nav>
+
+    </div>
 
         {% include 'modals/rename.html' %}
         {% include 'components/toolbar.html' %}
@@ -36,10 +82,10 @@
 
     </main>
 
+     <!-- Footer -->
     {% include 'components/footer.html' %}
 
 </div>
-
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <script>
@@ -53,6 +99,7 @@
 <script src="{{ url_for('static', filename='js/folder.js') }}"></script>
 <script src="{{ url_for('static', filename='js/rename.js') }}"></script>
 <script src="{{ url_for('static', filename='js/delete.js') }}"></script>
+<script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
 
 </body>
 </html>

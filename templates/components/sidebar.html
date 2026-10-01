@@ -35,11 +35,41 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-star"></i>
+
+                    <a
+                        href="#"
+                        class="nav-link"
+                        id="btnSidebarFavorite"
+                        data-path="{{ current_path }}">
+                        <i
+                            id="favoriteStar"
+                            class="bi {{ 'bi-star-fill is-favorite' if is_favorite else 'bi-star' }}">
+                        </i>
+
                         <p>Favorites</p>
                     </a>
+
                 </li>
+
+                {% if favorite_paths %}
+                    {% for favorite in favorite_paths %}
+
+                    <li class="nav-item">
+
+                        <a
+                            href="/?path={{ favorite }}"
+                            class="nav-link ps-4">
+
+                            <i class="bi bi-folder-fill"></i>
+
+                            <p>{{ favorite.split('/')[-1] }}</p>
+
+                        </a>
+
+                    </li>
+
+                    {% endfor %}
+                {% endif %}
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -47,6 +77,21 @@
                         <p>Recent</p>
                     </a>
                 </li>
+
+                {% if recent_paths %}
+                    {% for recent in recent_paths %}
+
+                    <li class="nav-item">
+                        <a
+                            href="/?path={{ recent }}"
+                            class="nav-link ps-4">
+                            <i class="bi bi-folder-fill"></i>
+                            <p>{{ recent.split('/')[-1] }}</p>
+                        </a>
+                    </li>
+
+                    {% endfor %}
+                {% endif %}
 
             </ul>
 

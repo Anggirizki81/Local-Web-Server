@@ -83,6 +83,10 @@ body {
     flex-shrink: 0;
 }
 
+#favoriteStar.is-favorite {
+    color: #0d6efd;
+}
+
 /* Mobile */
 @media (max-width: 576px) {
 
